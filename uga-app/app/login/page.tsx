@@ -81,7 +81,7 @@ export default function LoginPage() {
               } as CSSProperties;
 
               const ribbonTextureStyle = {
-                backgroundImage: "url('/caba1.png')",
+                backgroundImage: "url('/caba2.png')",
                 backgroundPosition: "left center",
                 backgroundSize: "auto 100%",
                 backgroundRepeat: "repeat-x",
