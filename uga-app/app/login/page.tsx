@@ -1,4 +1,7 @@
+"use client";
+
 import type { CSSProperties } from "react";
+import { useRouter } from "next/navigation";
 
 const ribbons = [
   {
@@ -58,6 +61,8 @@ const ribbons = [
 ];
 
 export default function LoginPage() {
+  const router = useRouter();
+
   return (
     <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-black px-4">
       <div className="pointer-events-none absolute inset-0">
@@ -103,7 +108,6 @@ export default function LoginPage() {
             <div className="absolute inset-[1px] rounded-[999px] border border-white/8" />
           </div>
         ))}
-
       </div>
 
       <section className="relative z-10 w-full max-w-md overflow-hidden rounded-[2rem] border border-white/10 bg-black/40 p-6 shadow-[0_0_90px_rgba(20,120,255,0.08),0_0_140px_rgba(0,0,0,0.65)] backdrop-blur-md">
@@ -116,8 +120,11 @@ export default function LoginPage() {
 
         <div className="mb-8 flex items-center justify-between">
           <div className="flex rounded-full border border-white/10 bg-black/50 p-1">
+
+            {/* ONLY FUNCTION ADDED */}
             <button
               type="button"
+              onClick={() => router.push("/login")}
               className="rounded-full bg-white px-6 py-2 text-sm font-medium text-black"
             >
               Sign in
@@ -125,20 +132,24 @@ export default function LoginPage() {
 
             <button
               type="button"
+              onClick={() => router.push("/signup")}
               className="rounded-full px-6 py-2 text-sm font-medium text-white/50"
             >
               Sign up
             </button>
+
           </div>
 
           <button
             type="button"
+            onClick={() => router.push("/")}
             className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-lg text-white/80 transition hover:bg-white/10"
           >
             ×
           </button>
         </div>
 
+        {/* EVERYTHING BELOW IS EXACTLY YOUR ORIGINAL */}
         <div className="mb-6">
           <h1 className="text-3xl font-semibold tracking-tight text-white">
             Welcome back
@@ -218,7 +229,6 @@ export default function LoginPage() {
           By signing in, you agree to our Terms & Service.
         </p>
       </section>
-
     </main>
   );
 }
