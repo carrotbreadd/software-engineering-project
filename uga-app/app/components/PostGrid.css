@@ -1,0 +1,12 @@
+.post-grid {
+    margin-left: 301px;
+    margin-top: 98px;
+    border-color: black;
+    border-width: 2px;
+    border-style: solid;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    z-index: 5;
+    overflow: hidden;
+}

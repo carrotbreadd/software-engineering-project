@@ -1,0 +1,35 @@
+* {
+    margin: 0px;
+    padding: 0px;
+}
+
+.bar-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 100px;
+    width: 100%;
+    border-color: black;
+    border-style: solid;
+    border-width: 2px;
+    position: fixed;
+    z-index: 10;
+    background-color: rgb(226, 142, 75);
+}
+
+.left-container {
+    width: 105px;
+}
+
+.title-container {
+    width: 1fr;
+    font-size: 30px;
+}
+
+.image-container {
+    width: 105px;
+}
+
+.logo {
+    height: 100px;
+}
