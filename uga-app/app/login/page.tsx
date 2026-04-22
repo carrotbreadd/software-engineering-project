@@ -1,6 +1,6 @@
 "use client";
 
-import type { CSSProperties } from "react";
+import { useState, type CSSProperties } from "react";
 import { useRouter } from "next/navigation";
 
 const ribbons = [
@@ -60,11 +60,129 @@ const ribbons = [
   },
 ];
 
+function CheckEmailIsValid(Email: string) {
+  return Email.includes("@") && Email.includes(".");
+}
+
+function GetInputClassName(IsValid: boolean, ShowError: boolean) {
+  if (ShowError) {
+    return "border-red-400/80 shadow-[0_0_0_1px_rgba(248,113,113,0.45),0_0_20px_rgba(248,113,113,0.18)]";
+  }
+
+  if (IsValid) {
+    return "border-emerald-400/80 shadow-[0_0_0_1px_rgba(52,211,153,0.35),0_0_20px_rgba(52,211,153,0.14)]";
+  }
+
+  return "border-white/10 focus-within:border-white/20";
+}
+
 export default function LoginPage() {
   const router = useRouter();
 
+  const [Email, GetEmail] = useState("");
+  const [Password, GetPassword] = useState("");
+  const [FormMessage, SetFormMessage] = useState("");
+  const [FormMessageType, SetFormMessageType] = useState<"Error" | "Success" | "">("");
+  const [ShowValidation, SetShowValidation] = useState(false);
+  const [IsSubmitting, SetIsSubmitting] = useState(false);
+  const [FormFlashClass, SetFormFlashClass] = useState("");
+
+  const EmailIsValid = CheckEmailIsValid(Email.trim());
+  const PasswordIsValid = Password.trim().length > 5;
+  const FormIsValid = EmailIsValid && PasswordIsValid;
+  const ShowEmailError = (ShowValidation || Email.length > 0) && !EmailIsValid;
+  const ShowPasswordError = (ShowValidation || Password.length > 0) && !PasswordIsValid;
+
+  function TriggerFormFlash(FlashClassName: string) {
+    SetFormFlashClass(FlashClassName);
+
+    window.setTimeout(() => {
+      SetFormFlashClass("");
+    }, 550);
+  }
+
+  async function HandleLogin(Event: React.FormEvent<HTMLFormElement>) {
+    Event.preventDefault();
+
+    SetShowValidation(true);
+
+    if (!FormIsValid) {
+      SetFormMessage("Please fix the red fields before signing in.");
+      SetFormMessageType("Error");
+      TriggerFormFlash("animate-[SoftErrorFlash_0.55s_ease]");
+      return;
+    }
+
+    SetIsSubmitting(true);
+    SetFormMessage("");
+    SetFormMessageType("");
+
+    try {
+      const Response = await fetch("/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          Email,
+          Password,
+        }),
+      });
+
+      const Data = await Response.json();
+      console.log(Data);
+
+      if (!Response.ok) {
+        SetFormMessage(Data.Message || "Login failed");
+        SetFormMessageType("Error");
+        TriggerFormFlash("animate-[SoftErrorFlash_0.55s_ease]");
+        return;
+      }
+
+      SetFormMessage("Login successful. Redirecting...");
+      SetFormMessageType("Success");
+      TriggerFormFlash("animate-[SoftSuccessFlash_0.55s_ease]");
+      router.push("/");
+    } catch (Error) {
+      console.error(Error);
+      SetFormMessage("Something went wrong. Please try again.");
+      SetFormMessageType("Error");
+      TriggerFormFlash("animate-[SoftErrorFlash_0.55s_ease]");
+    } finally {
+      SetIsSubmitting(false);
+    }
+  }
+
   return (
     <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-black px-4">
+      <style jsx global>{`
+        @keyframes SoftErrorFlash {
+          0% {
+            box-shadow: 0 0 0 0 rgba(248, 113, 113, 0);
+          }
+          50% {
+            box-shadow: 0 0 0 2px rgba(248, 113, 113, 0.55),
+              0 0 32px rgba(248, 113, 113, 0.18);
+          }
+          100% {
+            box-shadow: 0 0 0 0 rgba(248, 113, 113, 0);
+          }
+        }
+
+        @keyframes SoftSuccessFlash {
+          0% {
+            box-shadow: 0 0 0 0 rgba(52, 211, 153, 0);
+          }
+          50% {
+            box-shadow: 0 0 0 2px rgba(52, 211, 153, 0.45),
+              0 0 32px rgba(52, 211, 153, 0.16);
+          }
+          100% {
+            box-shadow: 0 0 0 0 rgba(52, 211, 153, 0);
+          }
+        }
+      `}</style>
+
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(16,32,54,0.24),transparent_34%),linear-gradient(180deg,rgba(0,0,0,0.6),rgba(0,0,0,0.92))]" />
 
@@ -110,7 +228,7 @@ export default function LoginPage() {
         ))}
       </div>
 
-      <section className="relative z-10 w-full max-w-md overflow-hidden rounded-[2rem] border border-white/10 bg-black/40 p-6 shadow-[0_0_90px_rgba(20,120,255,0.08),0_0_140px_rgba(0,0,0,0.65)] backdrop-blur-md">
+      <section className={`relative z-10 w-full max-w-md overflow-hidden rounded-[2rem] border border-white/10 bg-black/40 p-6 shadow-[0_0_90px_rgba(20,120,255,0.08),0_0_140px_rgba(0,0,0,0.65)] backdrop-blur-md transition-all duration-300 ${FormFlashClass}`}>
         <div className="pointer-events-none absolute inset-0">
           <div className="absolute inset-x-[12%] top-[-14%] h-28 rounded-full bg-cyan-300/10 blur-3xl" />
           <div className="absolute right-[-8%] top-[8%] h-32 w-32 rounded-full bg-amber-200/8 blur-3xl" />
@@ -159,21 +277,34 @@ export default function LoginPage() {
           </p>
         </div>
 
-        <form className="space-y-4">
+        <form className="space-y-4" onSubmit={HandleLogin}>
           <div>
-            <input
-              type="email"
-              placeholder="Enter your email"
-              className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none placeholder:text-white/30 focus:border-white/20"
-            />
+            <div className={`rounded-xl border bg-white/5 transition-all duration-300 ${GetInputClassName(EmailIsValid, ShowEmailError)}`}>
+              <input
+                  type="email"
+                  placeholder="Enter your email"
+                  value={Email ?? ""}
+                  onChange={(Event) => GetEmail(Event.target.value)}
+                  className="w-full rounded-xl bg-transparent px-4 py-3 text-sm text-white outline-none placeholder:text-white/30"
+              />
+            </div>
+            <p className={`mt-2 text-xs transition-colors duration-300 ${ShowEmailError ? "text-red-300" : EmailIsValid ? "text-emerald-300" : "text-white/35"}`}>
+              Use a valid email address with an @ in it.
+            </p>
           </div>
-
           <div>
-            <input
-              type="password"
-              placeholder="Enter your password"
-              className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none placeholder:text-white/30 focus:border-white/20"
-            />
+            <div className={`rounded-xl border bg-white/5 transition-all duration-300 ${GetInputClassName(PasswordIsValid, ShowPasswordError)}`}>
+              <input
+                type="password"
+                placeholder="Enter your password"
+                value={Password ?? ""}
+                onChange={(Event) => GetPassword(Event.target.value)}
+                className="w-full rounded-xl bg-transparent px-4 py-3 text-sm text-white outline-none placeholder:text-white/30"
+              />
+            </div>
+            <p className={`mt-2 text-xs transition-colors duration-300 ${ShowPasswordError ? "text-red-300" : PasswordIsValid ? "text-emerald-300" : "text-white/35"}`}>
+              Password must be longer than 5 characters.
+            </p>
           </div>
 
           <div className="flex items-center justify-between pt-1">
@@ -193,11 +324,18 @@ export default function LoginPage() {
             </button>
           </div>
 
+          {FormMessage ? (
+            <p className={`text-sm ${FormMessageType === "Success" ? "text-emerald-300" : "text-red-300"}`}>
+              {FormMessage}
+            </p>
+          ) : null}
+
           <button
             type="submit"
-            className="mt-2 w-full rounded-xl bg-white px-4 py-3 text-sm font-semibold text-black transition hover:bg-white/90"
+            disabled={IsSubmitting}
+            className="mt-2 w-full rounded-xl bg-white px-4 py-3 text-sm font-semibold text-black transition hover:bg-white/90 disabled:cursor-not-allowed disabled:opacity-70"
           >
-            Sign in
+            {IsSubmitting ? "Signing In..." : "Sign in"}
           </button>
         </form>
 
