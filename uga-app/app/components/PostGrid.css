@@ -9,4 +9,5 @@
     position: absolute;
     z-index: 5;
     overflow: hidden;
+    background-color: rgb(232, 211, 195);
 }
