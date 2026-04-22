@@ -1,7 +1,9 @@
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
+import crypto from "crypto";
 import { connectDB } from "@/lib/mongodb";
 import User from "@/models/User";
+import Session from "@/models/Session";
 
 export async function POST(request: Request) {
   try {
@@ -14,20 +16,6 @@ export async function POST(request: Request) {
     if (!CleanEmail || !CleanPassword) {
       return NextResponse.json(
         { Message: "Email and password are required" },
-        { status: 400 }
-      );
-    }
-
-    if (!CleanEmail.includes("@") || !CleanEmail.includes(".")) {
-      return NextResponse.json(
-        { Message: "Please enter a valid email address" },
-        { status: 400 }
-      );
-    }
-
-    if (CleanPassword.length <= 5) {
-      return NextResponse.json(
-        { Message: "Password must be longer than 5 characters" },
         { status: 400 }
       );
     }
@@ -55,7 +43,16 @@ export async function POST(request: Request) {
       );
     }
 
-    return NextResponse.json(
+    const SessionId = crypto.randomBytes(32).toString("hex");
+    const ExpiresAt = new Date(Date.now() + 1000 * 60 * 60 * 24 * 7);
+
+    await Session.create({
+      userId: FoundUser._id,
+      sessionId: SessionId,
+      expiresAt: ExpiresAt,
+    });
+
+    const Response = NextResponse.json(
       {
         Message: "Login successful",
         User: {
@@ -66,6 +63,16 @@ export async function POST(request: Request) {
       },
       { status: 200 }
     );
+
+    Response.cookies.set("sessionId", SessionId, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+      expires: ExpiresAt,
+    });
+
+    return Response;
   } catch (error) {
     console.error("Login route error:", error);
 
