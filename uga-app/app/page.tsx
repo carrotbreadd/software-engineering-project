@@ -9,7 +9,8 @@ import {useEffect, useState} from "react"
 function ForYou() {
 
   const [postList, setPostList] = useState<string[]>([])
-  const [SessionMessage, SetSessionMessage] = useState("")
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null)
+  const [sessionMessage, setSessionMessage] = useState("")
 
   useEffect(() => {
     async function CheckSession() {
@@ -25,15 +26,19 @@ function ForYou() {
 
         if (!Response.ok) {
           console.log("No valid session:", Data);
-          SetSessionMessage(Data.Message || "You are not logged in.");
+          setIsLoggedIn(false)
+          setSessionMessage(Data.Message || "You are not logged in.");
           return;
         }
 
         console.log("Session check result:", Data);
-        SetSessionMessage(`Logged in as ${Data.User?.Username ?? "User"}`);
+        setIsLoggedIn(true)
+        setSessionMessage(`Logged in as ${Data.User?.Username ?? "User"}`);
+
       } catch (error) {
         console.log("Session check failed:", error);
-        SetSessionMessage("Could not check session.");
+        setIsLoggedIn(false)
+        setSessionMessage("Could not check session.");
       }
     }
 
@@ -41,17 +46,27 @@ function ForYou() {
   }, []);
 
   const addToList = (newPost: string) => {
-    setPostList(postList => [newPost, ...postList])
+    setPostList(prev => [newPost, ...prev])
   }
 
-  return <>
-    <TitleBar></TitleBar>
-    <div>
-      {SessionMessage ? <p>{SessionMessage}</p> : null}
-      <MakePost updateList={addToList}></MakePost>
-      <PostGrid postList={postList}></PostGrid>
-    </div>
-  </>
+  return (
+  <div className="foryou-container">
+    <TitleBar />
+
+    {isLoggedIn === null ? (
+      <p>Loading session...</p>
+    ) : (
+      <p>{sessionMessage}</p>
+    )}
+
+    <MakePost
+      updateList={addToList}
+      isLoggedIn={!!isLoggedIn}
+    />
+
+    <PostGrid postList={postList} />
+  </div>
+)
 }
 
 export default ForYou
