@@ -78,3 +78,9 @@
     width: 29.6px;
     border-width: 1px;
 }
+
+@media (max-width: 700px) {
+    .post-container {
+        width: calc(100vw - 105px);
+    }
+}

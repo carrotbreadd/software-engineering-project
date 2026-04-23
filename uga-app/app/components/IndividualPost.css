@@ -22,3 +22,17 @@
 .profile-picture {
     object-fit: cover;
 }
+
+@media (max-width: 700px) {
+    .individual-post {
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+
+    .profile-picture-container {
+        height: 70px;
+        width: 70px;
+        margin-right: 12px;
+        border-radius: 999px;
+    }
+}
