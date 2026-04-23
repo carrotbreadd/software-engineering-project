@@ -36,7 +36,7 @@ function TitleBar({ isLoggedIn, onLogout }: TitleBarProps) {
                 )}
 
                 <div className='image-container'>
-                    <Image className='logo' src={logo} alt='logo' />
+                    <Image className='logo' src={logo} alt='logo' loading="eager" />
                 </div>
             </div>
         </div>
