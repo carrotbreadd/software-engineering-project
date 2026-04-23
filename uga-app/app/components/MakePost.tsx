@@ -55,6 +55,11 @@ function MakePost({updateList, isLoggedIn}: Props) {
 
                         <div className='post-button-container'>
                             <button className='post-button' onClick={submitInput}>
+                                <img
+                                    src="/cpy1.png"
+                                    alt="post icon"
+                                    className="post-icon"
+                                />
                                 Post
                             </button>
                         </div>

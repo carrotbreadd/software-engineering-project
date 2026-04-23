@@ -13,45 +13,53 @@ function ForYou() {
   const [sessionMessage, setSessionMessage] = useState("")
 
   useEffect(() => {
-    async function CheckSession() {
-      try {
-        const Response = await fetch("/api/sessionCheck");
-        const ResponseType = Response.headers.get("content-type") || "";
+  async function CheckSession() {
+    try {
+      const Response = await fetch("/api/sessionCheck");
+      const ResponseType = Response.headers.get("content-type") || "";
 
-        if (!ResponseType.includes("application/json")) {
-          throw new Error("Session check did not return JSON.");
-        }
-
-        const Data = await Response.json();
-
-        if (!Response.ok) {
-          console.log("No valid session:", Data);
-          setIsLoggedIn(false)
-          setSessionMessage(Data.Message || "You are not logged in.");
-          return;
-        }
-
-        console.log("Session check result:", Data);
-        setIsLoggedIn(true)
-        setSessionMessage(`Logged in as ${Data.User?.Username ?? "User"}`);
-
-      } catch (error) {
-        console.log("Session check failed:", error);
-        setIsLoggedIn(false)
-        setSessionMessage("Could not check session.");
+      if (!ResponseType.includes("application/json")) {
+        throw new Error("Session check did not return JSON.");
       }
+
+      const Data = await Response.json();
+
+      if (!Response.ok) {
+        setIsLoggedIn(false);
+        setSessionMessage(Data.Message || "You are not logged in.");
+        return;
+      }
+
+      setIsLoggedIn(true);
+      setSessionMessage(`Logged in as ${Data.User?.Username ?? "User"}`);
+    } catch (error) {
+      setIsLoggedIn(false);
+      setSessionMessage("Could not check session.");
     }
+  }
 
+  CheckSession();
+
+  const handleFocus = () => {
     CheckSession();
-  }, []);
+  };
 
+  window.addEventListener("focus", handleFocus);
+
+  return () => {
+    window.removeEventListener("focus", handleFocus);
+  };
+}, []);
   const addToList = (newPost: string) => {
     setPostList(prev => [newPost, ...prev])
   }
 
   return (
   <div className="foryou-container">
-    <TitleBar />
+    <TitleBar
+      isLoggedIn={!!isLoggedIn}
+      onLogout={() => setIsLoggedIn(false)}
+    />
 
     {isLoggedIn === null ? (
       <p>Loading session...</p>

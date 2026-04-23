@@ -326,6 +326,20 @@ export default function SignUpPage() {
             <input type="checkbox" className="h-4 w-4 rounded border-white/20 bg-transparent" />
             Remember me
           </label>
+          <div className="mt-6 flex justify-center">
+          <button
+             type="button"
+             onClick={() => router.push("/")}
+             className="flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-5 py-2 text-sm text-white/70 transition hover:bg-white/10 hover:text-white"
+          >
+             <img
+              src="/cpy1.png"
+              alt="For You"
+              className="h-5 w-5"
+             />
+             For You Page
+            </button>
+          </div>
 
           {FormMessage ? (
             <p className={`text-sm ${FormMessageType === "Success" ? "text-emerald-300" : "text-red-300"}`}>
