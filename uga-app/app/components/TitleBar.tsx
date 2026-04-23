@@ -25,7 +25,7 @@ function TitleBar({ isLoggedIn, onLogout }: TitleBarProps) {
             <div className='left-container' />
 
             <div className='title-container'>
-                Capybara Twitter
+                Capychat
             </div>
 
             <div className='right-container'>
