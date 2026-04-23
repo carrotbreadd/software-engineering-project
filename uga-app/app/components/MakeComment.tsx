@@ -4,9 +4,9 @@ import './MakeComment.css'
 
 function MakeComment() {
     return <>
-        <div>
-            <textarea placeholder='Type your comment here...'></textarea>
-            <button>Post</button>
+        <div className='comment-bar'>
+            <textarea placeholder='Type your comment here...' className='type-comment'></textarea>
+            <button className='post-comment-button'>Post</button>
         </div>
     </>
 }

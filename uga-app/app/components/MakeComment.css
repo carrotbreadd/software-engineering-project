@@ -1,0 +1,28 @@
+.comment-bar {
+    margin-top: auto;
+    display: flex;
+    height: 50px;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 5px;
+}
+
+.type-comment {
+    margin-left: 5px;
+    width: 100%;
+    border-width: 1px;
+    border-color: black;
+    border-style: solid;
+    margin-right: 5px;
+    border-radius: 5px;
+}
+
+.post-comment-button {
+    margin-right: 5px;
+    border-radius: 100%;
+    border-width: 1px;
+    border-color: black;
+    border-style: solid;
+    padding: 3px;
+}

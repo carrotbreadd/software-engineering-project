@@ -1,0 +1,11 @@
+.individual-comment-container {
+    margin-right: 10px;
+    border-width: 1px;
+    min-height: 50px;
+    display: flex;
+    flex: 5;
+    align-items: center;
+    padding: 4px;
+    height: auto;
+    width: 90%;
+}
