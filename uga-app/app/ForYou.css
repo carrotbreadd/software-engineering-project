@@ -1,8 +1,7 @@
-html, body {
-    height: 100%;
+.foryou-container {
+    min-height: 100dvh;
     width: 100%;
-    margin: 0;
     overflow-x: hidden;
-    font-family: Arial;
+    font-family: Arial, Helvetica, sans-serif;
     background-color: rgba(254, 247, 229);
 }
