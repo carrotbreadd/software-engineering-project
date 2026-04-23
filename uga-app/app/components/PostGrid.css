@@ -4,10 +4,22 @@
     border-color: black;
     border-width: 2px;
     border-style: solid;
-    height: 100%;
-    width: 100%;
+    height: calc(100dvh - 98px);
+    width: calc(100% - 301px);
     position: absolute;
     z-index: 5;
-    overflow: hidden;
+    overflow-y: auto;
+    overflow-x: hidden;
     background-color: rgb(232, 211, 195);
+    box-sizing: border-box;
+    padding-bottom: 24px;
+}
+
+@media (max-width: 700px) {
+    .post-grid {
+        margin-left: 0;
+        margin-top: 420px;
+        width: 100%;
+        height: calc(100dvh - 420px);
+    }
 }
