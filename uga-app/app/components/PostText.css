@@ -7,6 +7,13 @@
     border-width: 1px;
 }
 
+.username-container {
+    padding: 6px 8px;
+    font-weight: bold;
+    background-color: rgb(222, 153, 98);
+    border-bottom: 1px solid black;
+}
+
 .top-container {
     display: flex;
     border-color: black;

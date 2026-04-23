@@ -362,6 +362,20 @@ export default function LoginPage() {
             Apple
           </button>
         </div>
+        <div className="mt-6 flex justify-center">
+          <button
+             type="button"
+             onClick={() => router.push("/")}
+             className="flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-5 py-2 text-sm text-white/70 transition hover:bg-white/10 hover:text-white"
+          >
+             <img
+              src="/cpy1.png"
+              alt="For You"
+              className="h-5 w-5"
+             />
+             For You Page
+            </button>
+          </div>
 
         <p className="mt-6 text-center text-xs text-white/35">
           By signing in, you agree to our Terms & Service.

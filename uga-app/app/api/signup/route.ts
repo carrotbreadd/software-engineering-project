@@ -51,6 +51,13 @@ import bcrypt from "bcryptjs";
 import { connectDB } from "@/lib/mongodb";
 import User from "@/models/User";
 
+const ProfileImages = ["/caba1.png", "/caba2.png", "/caba3.png", "/cpy1.png"];
+
+function GetRandomProfileImage() {
+  const RandomIndex = Math.floor(Math.random() * ProfileImages.length);
+  return ProfileImages[RandomIndex];
+}
+
 export async function POST(request: Request) {
   try {
     const body = await request.json();
@@ -107,11 +114,13 @@ export async function POST(request: Request) {
     }
 
     const PasswordHash = await bcrypt.hash(CleanPassword, 12);
+    const ProfileImage = GetRandomProfileImage();
 
     await User.create({
       username: CleanUsername,
       email: CleanEmail,
       passwordHash: PasswordHash,
+      profileImage: ProfileImage,
     });
 
     return NextResponse.json(
