@@ -12,7 +12,7 @@ interface Props {
 function Comment({children, profile}: Props) {
     return <>
         <div className='individual-comment'>
-            <Image className='comment-profile-picture' src={profile} alt='profile' ></Image>
+            <Image className='comment-profile-picture' src={profile} alt='profile'></Image>
             <CommentText>{children}</CommentText>
         </div>
     </>

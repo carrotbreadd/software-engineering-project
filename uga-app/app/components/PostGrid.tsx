@@ -11,13 +11,15 @@ type PostItem = {
 
 interface Props {
     postList: PostItem[]
+    showComments: boolean
+    setShowComments: (showComments: boolean) => void
 }
 
-function PostGrid({postList}: Props) {
+function PostGrid({postList, showComments, setShowComments}: Props) {
     return <>
         <div className='post-grid'>
             {postList.map((post, index) => (
-                <IndividualPost key={index} profile={post.ProfileImage || DefaultProfileImage} username={post.Username}>{post.Text}</IndividualPost>
+                <IndividualPost showComments={showComments} setShowComments={setShowComments} key={index} profile={post.ProfileImage || DefaultProfileImage} username={post.Username}>{post.Text}</IndividualPost>
             ))}
         </div>
     </>

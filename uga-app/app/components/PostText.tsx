@@ -6,9 +6,11 @@ import {useState} from "react"
 interface Props {
     children: string;
     username: string;
+    showComments: boolean;
+    setShowComments: (showComments: boolean) => void;
 }
 
-function PostText({children, username}: Props) {
+function PostText({children, username, showComments, setShowComments}: Props) {
     const [isLiked, setIsLiked] = useState(false)
 
     return <>
@@ -27,7 +29,7 @@ function PostText({children, username}: Props) {
             </div>
         </div>
         <div className='bottom-container'>
-            <button className='comment-button'>View Comments (2)</button>
+            <button className='comment-button' onClick={() => setShowComments(!showComments)}>View Comments (2)</button>
         </div>
     </div>
     </>

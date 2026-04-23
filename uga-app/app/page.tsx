@@ -20,6 +20,7 @@ function ForYou() {
   const [postList, setPostList] = useState<PostItem[]>([])
   const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null)
   const [sessionMessage, setSessionMessage] = useState("")
+  const [showComments, setShowComments] = useState(false)
 
   useEffect(() => {
     async function LoadPosts() {
@@ -110,8 +111,9 @@ function ForYou() {
       isLoggedIn={!!isLoggedIn}
     />
 
-    <PostGrid postList={postList} />
-    <CommentSection></CommentSection>
+    <PostGrid postList={postList} showComments={showComments} setShowComments={setShowComments} />
+
+    {showComments ? <CommentSection showComments={showComments} setShowComments={setShowComments}></CommentSection> : <></>}
   </div>
 )
 }
