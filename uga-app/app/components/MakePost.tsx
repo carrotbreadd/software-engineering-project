@@ -4,8 +4,10 @@ import './MakePost.css'
 import {useRef} from 'react'
 import Link from "next/link"
 
+const DefaultProfileImage = "/cpy1.png"
+
 interface Props {
-    updateList: (data: string) => void
+    updateList: (data: { Text: string; Username: string; ProfileImage: string }) => void
     isLoggedIn: boolean
 }
 
@@ -13,10 +15,32 @@ function MakePost({updateList, isLoggedIn}: Props) {
 
     const postInput = useRef<HTMLTextAreaElement>(null)
 
-    const submitInput = () => {
+    const submitInput = async () => {
         if (postInput.current && postInput.current.value) {
             const newValue = postInput.current.value
-            updateList(newValue)
+
+            const Response = await fetch("/api/post", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    Text: newValue,
+                }),
+            })
+
+            const Data = await Response.json()
+
+            if (!Response.ok) {
+                alert(Data.Message || "Post failed")
+                return
+            }
+
+            updateList({
+                Text: Data.Post.Text,
+                Username: Data.Post.Username,
+                ProfileImage: Data.Post.ProfileImage || DefaultProfileImage,
+            })
             postInput.current.value = ""
         }
     }

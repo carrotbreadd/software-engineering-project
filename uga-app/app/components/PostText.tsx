@@ -5,13 +5,17 @@ import {useState} from "react"
 
 interface Props {
     children: string;
+    username: string;
 }
 
-function PostText({children}: Props) {
+function PostText({children, username}: Props) {
     const [isLiked, setIsLiked] = useState(false)
 
     return <>
     <div className='post-container'>
+        <div className='username-container'>
+            @{username}
+        </div>
         <div className='top-container'>
             <div className='text-container'>
                 {children}

@@ -1,4 +1,4 @@
-import mongoose, { Schema, models, model } from "mongoose";
+import { Schema, models, model } from "mongoose";
 
 const UserSchema = new Schema({
   username: {
@@ -17,6 +17,11 @@ const UserSchema = new Schema({
   passwordHash: {
     type: String,
     required: true,
+  },
+  profileImage: {
+    type: String,
+    required: true,
+    default: "/cpy1.png",
   },
   createdAt: {
     type: Date,

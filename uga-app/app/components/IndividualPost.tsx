@@ -1,17 +1,22 @@
 import PostText from './PostText'
 import './IndividualPost.css'
-import Image, { StaticImageData } from 'next/image';
+import Image from 'next/image';
 
 interface Props {
     children: string;
-    profile: StaticImageData;
+    profile: string;
+    username: string;
 }
 
-function IndividualPost({children, profile}: Props) {
+function IndividualPost({children, profile, username}: Props) {
+    const ProfileImage = profile || "/cpy1.png"
+
     return <>
         <div className='individual-post'>
-            <Image className='profile-picture' src={profile} alt="profile"/>
-            <PostText>{children}</PostText>
+            <div className='profile-picture-container'>
+                <Image className='profile-picture' src={ProfileImage} alt={`${username} profile`} fill sizes="115px"/>
+            </div>
+            <PostText username={username}>{children}</PostText>
         </div>
     </>
 }

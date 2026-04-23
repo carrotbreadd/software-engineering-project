@@ -6,51 +6,88 @@ import MakePost from './components/MakePost'
 import TitleBar from './components/TitleBar'
 import {useEffect, useState} from "react"
 
+type PostItem = {
+  Text: string
+  Username: string
+  ProfileImage: string
+}
+
+const DefaultProfileImage = "/cpy1.png"
+
 function ForYou() {
 
-  const [postList, setPostList] = useState<string[]>([])
+  const [postList, setPostList] = useState<PostItem[]>([])
   const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null)
   const [sessionMessage, setSessionMessage] = useState("")
 
   useEffect(() => {
-  async function CheckSession() {
-    try {
-      const Response = await fetch("/api/sessionCheck");
-      const ResponseType = Response.headers.get("content-type") || "";
+    async function LoadPosts() {
+      try {
+        const Response = await fetch("/api/post");
+        const Data = await Response.json();
 
-      if (!ResponseType.includes("application/json")) {
-        throw new Error("Session check did not return JSON.");
+        if (!Response.ok) {
+          console.log(Data.Message || "Could not load posts.");
+          return;
+        }
+
+        const LoadedPosts = Data.Posts.map((PostItem: PostItem) => ({
+          Text: PostItem.Text,
+          Username: PostItem.Username,
+          ProfileImage: PostItem.ProfileImage || DefaultProfileImage,
+        }));
+
+        setPostList(LoadedPosts);
+      } catch (error) {
+        console.log("Load posts failed:", error);
       }
-
-      const Data = await Response.json();
-
-      if (!Response.ok) {
-        setIsLoggedIn(false);
-        setSessionMessage(Data.Message || "You are not logged in.");
-        return;
-      }
-
-      setIsLoggedIn(true);
-      setSessionMessage(`Logged in as ${Data.User?.Username ?? "User"}`);
-    } catch (error) {
-      setIsLoggedIn(false);
-      setSessionMessage("Could not check session.");
     }
-  }
 
-  CheckSession();
+    async function CheckSession() {
+      try {
+        const Response = await fetch("/api/sessionCheck");
+        const ResponseType = Response.headers.get("content-type") || "";
 
-  const handleFocus = () => {
+        if (!ResponseType.includes("application/json")) {
+          throw new Error("Session check did not return JSON.");
+        }
+
+        const Data = await Response.json();
+
+        if (!Response.ok) {
+          setIsLoggedIn(false);
+          setSessionMessage(Data.Message || "You are not logged in.");
+          return;
+        }
+
+        setIsLoggedIn(true);
+        setSessionMessage(`Logged in as ${Data.User?.Username ?? "User"}`);
+      } catch {
+        setIsLoggedIn(false);
+        setSessionMessage("Could not check session.");
+      }
+    }
+
     CheckSession();
-  };
+    LoadPosts();
 
-  window.addEventListener("focus", handleFocus);
+    const PostInterval = window.setInterval(() => {
+      LoadPosts();
+    }, 2000);
 
-  return () => {
-    window.removeEventListener("focus", handleFocus);
-  };
-}, []);
-  const addToList = (newPost: string) => {
+    const handleFocus = () => {
+      CheckSession();
+      LoadPosts();
+    };
+
+    window.addEventListener("focus", handleFocus);
+
+    return () => {
+      window.clearInterval(PostInterval);
+      window.removeEventListener("focus", handleFocus);
+    };
+  }, []);
+  const addToList = (newPost: PostItem) => {
     setPostList(prev => [newPost, ...prev])
   }
 
