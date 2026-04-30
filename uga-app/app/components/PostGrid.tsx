@@ -19,7 +19,7 @@ function PostGrid({postList, showComments, setShowComments}: Props) {
     return <>
         <div className='post-grid'>
             {postList.map((post, index) => (
-                <IndividualPost showComments={showComments} setShowComments={setShowComments} key={index} profile={post.ProfileImage || DefaultProfileImage} username={post.Username}>{post.Text}</IndividualPost>
+                <IndividualPost showComments={showComments} setShowComments={setShowComments} key={postList.length - index} profile={post.ProfileImage || DefaultProfileImage} username={post.Username}>{post.Text}</IndividualPost>
             ))}
         </div>
     </>
