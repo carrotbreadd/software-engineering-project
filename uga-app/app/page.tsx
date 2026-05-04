@@ -8,9 +8,15 @@ import CommentSection from './components/CommentSection'
 import {useEffect, useState} from "react"
 
 type PostItem = {
+  Id: string
+  UserId: string
   Text: string
   Username: string
   ProfileImage: string
+  CreatedAt: string
+  LikeCount: number
+  CommentCount: number
+  IsLikedByCurrentUser: boolean
 }
 
 const DefaultProfileImage = "/cpy1.png"
@@ -20,7 +26,7 @@ function ForYou() {
   const [postList, setPostList] = useState<PostItem[]>([])
   const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null)
   const [sessionMessage, setSessionMessage] = useState("")
-  const [showComments, setShowComments] = useState(false)
+  const [selectedPostId, setSelectedPostId] = useState("")
 
   useEffect(() => {
     async function LoadPosts() {
@@ -34,12 +40,18 @@ function ForYou() {
         }
 
         const LoadedPosts = Data.Posts.map((PostItem: PostItem) => ({
+          Id: PostItem.Id,
+          UserId: PostItem.UserId,
           Text: PostItem.Text,
           Username: PostItem.Username,
           ProfileImage: PostItem.ProfileImage || DefaultProfileImage,
-        }));
+          CreatedAt: PostItem.CreatedAt,
+          LikeCount: PostItem.LikeCount || 0,
+          CommentCount: PostItem.CommentCount || 0,
+          IsLikedByCurrentUser: PostItem.IsLikedByCurrentUser || false,
+        }))
 
-        setPostList(LoadedPosts);
+        setPostList(LoadedPosts)
       } catch (error) {
         console.log("Load posts failed:", error);
       }
@@ -89,9 +101,18 @@ function ForYou() {
       window.removeEventListener("focus", handleFocus);
     };
   }, []);
+
   const addToList = (newPost: PostItem) => {
     setPostList(prev => [newPost, ...prev])
   }
+
+  const updatePostInList = (updatedPost: PostItem) => {
+    setPostList(prev =>
+      prev.map(post => post.Id === updatedPost.Id ? updatedPost : post)
+    )
+  }
+
+  const selectedPost = postList.find(post => post.Id === selectedPostId)
 
   return (
   <div className="foryou-container">
@@ -111,9 +132,21 @@ function ForYou() {
       isLoggedIn={!!isLoggedIn}
     />
 
-    <PostGrid postList={postList} showComments={showComments} setShowComments={setShowComments} />
+    <PostGrid
+      postList={postList}
+      openComments={setSelectedPostId}
+      updatePost={updatePostInList}
+    />
 
-    {showComments ? <CommentSection showComments={showComments} setShowComments={setShowComments}></CommentSection> : <></>}
+    {selectedPost ? (
+      <CommentSection
+        postId={selectedPost.Id}
+        commentCount={selectedPost.CommentCount}
+        isLoggedIn={!!isLoggedIn}
+        closeComments={() => setSelectedPostId("")}
+        updatePost={updatePostInList}
+      />
+    ) : <></>}
   </div>
 )
 }

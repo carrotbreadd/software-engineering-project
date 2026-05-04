@@ -1,25 +1,34 @@
 import './PostGrid.css'
 import IndividualPost from './IndividualPost'
 
-const DefaultProfileImage = "/cpy1.png"
-
 type PostItem = {
+    Id: string
+    UserId: string
     Text: string
     Username: string
     ProfileImage: string
+    CreatedAt: string
+    LikeCount: number
+    CommentCount: number
+    IsLikedByCurrentUser: boolean
 }
 
 interface Props {
     postList: PostItem[]
-    showComments: boolean
-    setShowComments: (showComments: boolean) => void
+    openComments: (postId: string) => void
+    updatePost: (updatedPost: PostItem) => void
 }
 
-function PostGrid({postList, showComments, setShowComments}: Props) {
+function PostGrid({postList, openComments, updatePost}: Props) {
     return <>
         <div className='post-grid'>
-            {postList.map((post, index) => (
-                <IndividualPost showComments={showComments} setShowComments={setShowComments} key={postList.length - index} profile={post.ProfileImage || DefaultProfileImage} username={post.Username}>{post.Text}</IndividualPost>
+            {postList.map((post) => (
+                <IndividualPost
+                    key={post.Id}
+                    post={post}
+                    openComments={openComments}
+                    updatePost={updatePost}
+                />
             ))}
         </div>
     </>

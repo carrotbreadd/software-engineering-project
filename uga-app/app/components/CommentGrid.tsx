@@ -1,17 +1,25 @@
 import './CommentGrid.css'
 import Comment from './Comment'
-import placeholder from '../assets/placeholder.avif'
+
+type CommentItem = {
+    Id: string
+    UserId: string
+    Username: string
+    ProfileImage: string
+    Text: string
+    CreatedAt: string
+}
 
 interface Props {
-    commentList: string[];
+    commentList: CommentItem[];
 }
 
 function CommentGrid({commentList}: Props) {
     return <>
         <div className='comment-grid'>
                 {
-                    commentList.map((comment, index) => (
-                    <Comment key={index} profile={placeholder}>{comment}</Comment>
+                    commentList.map((comment) => (
+                    <Comment key={comment.Id} comment={comment}></Comment>
                 ))
                 }
         </div>

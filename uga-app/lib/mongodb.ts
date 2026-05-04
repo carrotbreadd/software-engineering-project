@@ -2,25 +2,36 @@ import mongoose from "mongoose";
 
 const MONGODB_URI = process.env.MONGODB_URI as string;
 
+type MongooseCache = {
+  conn: typeof mongoose | null;
+  promise: Promise<typeof mongoose> | null;
+};
+
+declare global {
+  var mongooseCache: MongooseCache | undefined;
+}
+
 if (!MONGODB_URI) {
   throw new Error("MONGODB_URI not defined");
 }
 
-let cached = (global as any).mongoose;
+let cached = global.mongooseCache;
 
 if (!cached) {
-  cached = (global as any).mongoose = { conn: null, promise: null };
+  cached = global.mongooseCache = { conn: null, promise: null };
 }
 
-export async function connectDB() {
-  if (cached.conn) return cached.conn;
+const mongooseCache = cached;
 
-  if (!cached.promise) {
-    cached.promise = mongoose.connect(MONGODB_URI, {
+export async function connectDB() {
+  if (mongooseCache.conn) return mongooseCache.conn;
+
+  if (!mongooseCache.promise) {
+    mongooseCache.promise = mongoose.connect(MONGODB_URI, {
       dbName: "uga-app",
     });
   }
 
-  cached.conn = await cached.promise;
-  return cached.conn;
+  mongooseCache.conn = await mongooseCache.promise;
+  return mongooseCache.conn;
 }

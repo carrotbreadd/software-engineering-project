@@ -1,35 +1,66 @@
 "use client"
 
 import './PostText.css'
-import {useState} from "react"
 
-interface Props {
-    children: string;
-    username: string;
-    showComments: boolean;
-    setShowComments: (showComments: boolean) => void;
+type PostItem = {
+    Id: string
+    UserId: string
+    Text: string
+    Username: string
+    ProfileImage: string
+    CreatedAt: string
+    LikeCount: number
+    CommentCount: number
+    IsLikedByCurrentUser: boolean
 }
 
-function PostText({children, username, showComments, setShowComments}: Props) {
-    const [isLiked, setIsLiked] = useState(false)
+interface Props {
+    children: string
+    post: PostItem
+    openComments: (postId: string) => void
+    updatePost: (updatedPost: PostItem) => void
+}
+
+function PostText({children, post, openComments, updatePost}: Props) {
+    const toggleLike = async () => {
+        const Response = await fetch("/api/post", {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                Action: "toggleLike",
+                PostId: post.Id,
+            }),
+        })
+
+        const Data = await Response.json()
+
+        if (!Response.ok) {
+            alert(Data.Message || "Could not update like")
+            return
+        }
+
+        updatePost(Data.Post)
+    }
 
     return <>
     <div className='post-container'>
         <div className='username-container'>
-            @{username}
+            @{post.Username}
         </div>
         <div className='top-container'>
             <div className='text-container'>
                 {children}
             </div>
             <div className='button-container'>
-                <button className={isLiked ? "liked" : "not-liked"} onClick={() => setIsLiked(!isLiked)}>
-                    ❤️
+                <button className={post.IsLikedByCurrentUser ? "liked" : "not-liked"} onClick={toggleLike}>
+                    {"❤"} {post.LikeCount}
                 </button>
             </div>
         </div>
         <div className='bottom-container'>
-            <button className='comment-button' onClick={() => setShowComments(!showComments)}>View Comments (2)</button>
+            <button className='comment-button' onClick={() => openComments(post.Id)}>View Comments ({post.CommentCount})</button>
         </div>
     </div>
     </>
