@@ -2,23 +2,39 @@ import PostText from './PostText'
 import './IndividualPost.css'
 import Image from 'next/image';
 
-interface Props {
-    children: string;
-    profile: string;
-    username: string;
-    showComments: boolean;
-    setShowComments: (showComments: boolean) => void;
+type PostItem = {
+    Id: string
+    UserId: string
+    Text: string
+    Username: string
+    ProfileImage: string
+    CreatedAt: string
+    LikeCount: number
+    CommentCount: number
+    IsLikedByCurrentUser: boolean
 }
 
-function IndividualPost({children, profile, username, showComments, setShowComments}: Props) {
-    const ProfileImage = profile || "/cpy1.png"
+interface Props {
+    post: PostItem
+    openComments: (postId: string) => void
+    updatePost: (updatedPost: PostItem) => void
+}
+
+function IndividualPost({post, openComments, updatePost}: Props) {
+    const ProfileImage = post.ProfileImage || "/cpy1.png"
 
     return <>
         <div className='individual-post'>
             <div className='profile-picture-container'>
-                <Image className='profile-picture' src={ProfileImage} alt={`${username} profile`} fill sizes="115px"/>
+                <Image className='profile-picture' src={ProfileImage} alt={`${post.Username} profile`} fill sizes="115px"/>
             </div>
-            <PostText showComments={showComments} setShowComments={setShowComments} username={username}>{children}</PostText>
+            <PostText
+                post={post}
+                openComments={openComments}
+                updatePost={updatePost}
+            >
+                {post.Text}
+            </PostText>
         </div>
     </>
 }

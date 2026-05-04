@@ -3,11 +3,24 @@
 import './MakePost.css'
 import {useRef} from 'react'
 import Link from "next/link"
+import Image from "next/image"
+
+type PostItem = {
+    Id: string
+    UserId: string
+    Text: string
+    Username: string
+    ProfileImage: string
+    CreatedAt: string
+    LikeCount: number
+    CommentCount: number
+    IsLikedByCurrentUser: boolean
+}
 
 const DefaultProfileImage = "/cpy1.png"
 
 interface Props {
-    updateList: (data: { Text: string; Username: string; ProfileImage: string }) => void
+    updateList: (data: PostItem) => void
     isLoggedIn: boolean
 }
 
@@ -37,9 +50,15 @@ function MakePost({updateList, isLoggedIn}: Props) {
             }
 
             updateList({
+                Id: Data.Post.Id,
+                UserId: Data.Post.UserId,
                 Text: Data.Post.Text,
                 Username: Data.Post.Username,
                 ProfileImage: Data.Post.ProfileImage || DefaultProfileImage,
+                CreatedAt: Data.Post.CreatedAt,
+                LikeCount: Data.Post.LikeCount || 0,
+                CommentCount: Data.Post.CommentCount || 0,
+                IsLikedByCurrentUser: Data.Post.IsLikedByCurrentUser || false,
             })
             postInput.current.value = ""
         }
@@ -79,10 +98,12 @@ function MakePost({updateList, isLoggedIn}: Props) {
 
                         <div className='post-button-container'>
                             <button className='post-button' onClick={submitInput}>
-                                <img
+                                <Image
                                     src="/cpy1.png"
                                     alt="post icon"
                                     className="post-icon"
+                                    width={24}
+                                    height={24}
                                 />
                                 Post
                             </button>

@@ -3,13 +3,14 @@
 import './CommentText.css'
 
 interface Props {
-    children: string;
+    children: string
+    username: string
 }
 
-function CommentText({children}: Props) {
+function CommentText({children, username}: Props) {
     return <>
     <div className='individual-comment-container'>
-        {children}
+        <strong>@{username}</strong> {children}
     </div>
     </>
 }
