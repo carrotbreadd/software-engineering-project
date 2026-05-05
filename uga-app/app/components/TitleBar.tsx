@@ -30,9 +30,17 @@ function TitleBar({ isLoggedIn, onLogout }: TitleBarProps) {
 
             <div className='right-container'>
                 {isLoggedIn && (
+                    <>
+                    <button className ='profile-button'
+                    onClick={() => router.push("/profile")}
+                    >
+                        Profile
+                    </button>
+                    
                     <button className='logout-button' onClick={handleLogout}>
                         Log out
                     </button>
+                    </>
                 )}
 
                 <div className='image-container'>

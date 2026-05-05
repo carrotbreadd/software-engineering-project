@@ -49,3 +49,15 @@
 .logout-button:hover {
     background-color: rgb(200, 130, 80);
 }
+
+.profile-button {
+    background-color: rgb(222, 153, 98);
+    border: 1px solid black;
+    padding: 2px 10px;
+    height: 29.6px;
+    cursor: pointer;
+}
+
+.profile-button:hover {
+    background-color: rgb(200, 130, 80);
+}

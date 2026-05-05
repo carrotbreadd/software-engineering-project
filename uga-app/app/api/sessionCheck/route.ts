@@ -1,3 +1,5 @@
+"use server";
+
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { connectDB } from "@/lib/mongodb";
@@ -82,17 +84,19 @@ export async function GET() {
       return Response;
     }
 
-    return NextResponse.json(
-      {
-        Message: "Session found",
-        User: {
-          Id: FoundUser._id,
-          Username: FoundUser.username,
-          Email: FoundUser.email,
-        },
-      },
-      { status: 200 }
-    );
+     return NextResponse.json(
+  {
+    Message: "Session found",
+    User: {
+      Id: FoundUser._id,
+      Username: FoundUser.username,
+      Email: FoundUser.email,
+      points: FoundUser.points || 0,
+      profileImage: FoundUser.profileImage ?? "/cpy1.png",
+    },
+  },
+  { status: 200 }
+);
   } catch (error) {
     console.error("Session check error:", error);
 

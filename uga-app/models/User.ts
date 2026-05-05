@@ -24,11 +24,11 @@ const UserSchema = new Schema({
     default: "/cpy1.png",
   },
   points: {
-    type: Number,
-    required: true,
-    default: 0,
-    min: 0,
-  },
+  type: Number,
+  required: true,
+  default: 50,
+  min: 0,
+},
   createdAt: {
     type: Date,
     default: Date.now,
