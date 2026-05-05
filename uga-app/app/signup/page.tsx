@@ -189,7 +189,7 @@ export default function SignUpPage() {
         }
       `}</style>
 
-      <div className="pointer-events-none absolute inset-0">
+      <div className="absolute inset-0 pointer-events-none -z-10">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(16,32,54,0.24),transparent_34%),linear-gradient(180deg,rgba(0,0,0,0.6),rgba(0,0,0,0.92))]" />
 
         {ribbons.map((ribbon, index) => (

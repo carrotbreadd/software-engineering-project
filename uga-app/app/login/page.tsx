@@ -183,7 +183,7 @@ export default function LoginPage() {
         }
       `}</style>
 
-      <div className="pointer-events-none absolute inset-0">
+      <div className="absolute inset-0 pointer-events-none -z-10">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(16,32,54,0.24),transparent_34%),linear-gradient(180deg,rgba(0,0,0,0.6),rgba(0,0,0,0.92))]" />
 
         {ribbons.map((ribbon, index) => (
@@ -239,7 +239,6 @@ export default function LoginPage() {
         <div className="mb-8 flex items-center justify-between">
           <div className="flex rounded-full border border-white/10 bg-black/50 p-1">
 
-            {/* ONLY FUNCTION ADDED */}
             <button
               type="button"
               onClick={() => router.push("/login")}
@@ -267,7 +266,6 @@ export default function LoginPage() {
           </button>
         </div>
 
-        {/* EVERYTHING BELOW IS EXACTLY YOUR ORIGINAL */}
         <div className="mb-6">
           <h1 className="text-3xl font-semibold tracking-tight text-white">
             Welcome back
