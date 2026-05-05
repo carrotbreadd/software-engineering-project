@@ -24,7 +24,7 @@ function PostGrid({postList, openComments, updatePost}: Props) {
         <div className='post-grid'>
             {postList.map((post) => (
                 <IndividualPost
-                    key={post.Id}
+                    key={postList.length - postList.indexOf(post)}
                     post={post}
                     openComments={openComments}
                     updatePost={updatePost}

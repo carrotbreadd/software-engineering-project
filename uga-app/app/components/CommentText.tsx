@@ -10,7 +10,7 @@ interface Props {
 function CommentText({children, username}: Props) {
     return <>
     <div className='individual-comment-container'>
-        <strong>@{username}</strong> {children}
+        <strong>@{username}</strong> | {children}
     </div>
     </>
 }

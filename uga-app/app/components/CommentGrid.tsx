@@ -19,7 +19,7 @@ function CommentGrid({commentList}: Props) {
         <div className='comment-grid'>
                 {
                     commentList.map((comment) => (
-                    <Comment key={comment.Id} comment={comment}></Comment>
+                    <Comment key={commentList.length - commentList.indexOf(comment)} comment={comment}></Comment>
                 ))
                 }
         </div>
