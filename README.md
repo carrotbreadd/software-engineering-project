@@ -12,6 +12,7 @@ for UGA students to be able to inteact with each other, in a friendly environmen
 
 ## Layout
 
+``` bash
 software-engineering-project/
 +-- README.md
 +-- uga-app/
@@ -21,6 +22,7 @@ software-engineering-project/
     +-- models/
     +-- public/
     +-- package.json
+```
 
 ### Dependencies
 
